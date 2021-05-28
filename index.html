@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Kodi Drive</title>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="logo-container">
+                <a href="http://localhost/kodidrive/"><img class="logo" src="logo.png" alt="Logo"></a>
+            </div>
+            <div class="menu-container">
+                <ul class="menu">
+                    <li>
+                        <a href="javascript:void(0)" @click="login">Aggiorna Catalogo</a> 
+                    </li>
+                </ul>
+                <input type="text" v-model="search_data" name="search" id="search-input" placeholder="Cerca il tuo film" @keyup.enter="login">
+                <button @click="login" class="search-btn" >Cerca</button>
+            </div>
+        </header>
+        <div class=content>
+            <div class="sidebar-container">
+                <ul class="sidebar-menu">
+                    <li v-for="menu_item in menu_items"> 
+                       <a :href="menu_item.li">{{ menu_item.category}}</a> 
+                    </li>                    
+                </ul>
+            </div>
+            <div class="cards-container">
+                <div class="card" v-for="card in cards" >
+                    <!-- <img src="cover.jpg" alt="Copertina film "> -->
+                    <a href="javascript:void(0)" @click="idOpen(card.id)" class="title" :id="card.id">
+                        {{ card.name }}
+                    </a>
+
+                </div>
+                <div class="popup-container" id="popup-container">
+                    <div class="popup">
+                        <button id="close">
+                            <i class="fas fa-times" ></i>
+                        </button>
+                        <iframe :src="id" width="100%" height="100%" class="video"
+                        allowfullscreen="allowfullscreen"
+                        mozallowfullscreen="mozallowfullscreen" 
+                        msallowfullscreen="msallowfullscreen" 
+                        oallowfullscreen="oallowfullscreen" 
+                        webkitallowfullscreen="webkitallowfullscreen"></iframe>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="script.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
