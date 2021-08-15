@@ -171,6 +171,65 @@ var app = new Vue({
                         localStorage.setItem('cards', JSON.stringify(app.cards));                        
                         app.token_drive='';
                         app.temp = [];
+            app.tmdb = [];
+        },
+        async parseTemp(){
+            app.temp.sort((a, b) => (a.name > b.name) ? 1 : -1);
+            for(var index =0; index < app.temp.length; index++ ){
+                app.temp[index].name =  app.temp[index].name.toLowerCase(); 
+                app.temp[index].name =  app.temp[index].name.replace('.mkv','');
+                app.temp[index].name =  app.temp[index].name.replace('.mp4','');
+                app.temp[index].name =  app.temp[index].name.replace('.avi','');
+                app.temp[index].name =  app.temp[index].name.replace('cd1',''); 
+                app.temp[index].name =  app.temp[index].name.replace('cd2','');  
+                app.temp[index].name =  app.temp[index].name.replace("  ",' ');
+                app.temp[index].name =  app.temp[index].name.split('.').join(' ');
+                app.temp[index].name =  app.temp[index].name.split('-').join(' ');
+                app.temp[index].name =  app.temp[index].name.split('_').join(' ');
+                app.temp[index].name =  app.temp[index].name.charAt(0).toUpperCase()+ app.temp[index].name.slice(1); 
+                app.temp[index].name =  app.temp[index].name.split('_').join(' ');
+                app.temp[index].posterpath = 'https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg';              
+                for(var i = 1930 ; i <= 2100 ; i=i+1){
+                    app.temp[index].name =  app.temp[index].name.replace('('+i.toString()+')','');
+                    app.temp[index].name =  app.temp[index].name.replace(i.toString(),'');
+                    if (app.temp[index].name =="" || app.temp[index].name==" " || app.temp[index].name=="  " || app.temp[index].name=="   " || app.temp[index].name=="    " ){
+                        app.temp[index].name = temp;
+                    }
+                }                                                            
+                var y = document.getElementById('wait');
+                y.innerHTML='<h3>Caricamento...'+app.temp[index].name+' </h3>';              
+                await this.startCall(app.temp[index].name, index);
+                try {
+                    app.temp[index].year = app.tmdb[index].release_date.substring(0,4);
+
+                    app.temp[index].overview = app.tmdb[index].overview.substring(0,160) + '...';                                               
+                    app.temp[index].posterpath = 'https://image.tmdb.org/t/p/w500'+ app.tmdb[index].poster_path;
+                } catch (error) {
+                    console.log(error);
+                }
+            }       
+            this.visualCard();
+        },
+        update(name,year,overview,image){
+            app.cards[app.index].name=name;
+            app.cards[app.index].year=year;
+            app.cards[app.index].overview=overview;
+            app.cards[app.index].posterpath=image;
+            localStorage.clear();
+            localStorage.setItem('cards',JSON.stringify(app.cards));
+
+        },
+        search(){
+            app.temp=app.cards;
+            app.cards=[];
+            var i = 0;
+            for(const el of app.temp){
+                console.log(el.name.toLowerCase().indexOf(app.search_data.toLowerCase()));
+                if (el.name.toLowerCase().indexOf(app.search_data.toLowerCase()) > -1){
+                    app.cards[i] = el;
+                }else{
+                    app.cards.splice(i, 1);
+                              
                         }
                     },1000); 
                 });
