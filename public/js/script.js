@@ -232,7 +232,7 @@ const app = new Vue({
             }
             app.cards = JSON.parse(localStorage.getItem('cards'));
             this.visualCard();
-            const difference = app.temp.filter(item => !app.cards.some(other => item.id == other.id));
+            let difference = app.temp.filter(item => !app.cards.some(other => item.id == other.id));
             difference = app.removeDuplicate(difference);
             console.log(difference);
             app.cards = _.union(app.cards, difference);
